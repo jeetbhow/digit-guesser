@@ -1,14 +1,17 @@
-import "./canvas.css";
-import "./tools.css";
+import "./work-area.css";
 
 import $ from "jquery";
+import axios from "axios";
 
 const PENCIL_CURSOR_CLASS_NAME = "pencil-cursor";
+const DEV_SERVER_BASE_URL = "http://localhost:8000";
 
 let pencilToolActive = false;
 let isDrawing = false;
 let mouseLastX = 0;
 let mouseLastY = 0;
+
+const guessText = $("#guess-text");
 
 const pencil = $(".bi-pencil.tool");
 pencil.on("click", () => {
@@ -22,7 +25,9 @@ const ctx = canvasElem.getContext("2d")!;
 ctx.strokeStyle = "black";
 ctx.lineCap = "round";
 ctx.lineJoin = "round";
-ctx.lineWidth = 10;
+ctx.lineWidth = 20;
+
+setCanvasBackground("white");
 
 canvas.on("mousemove", event => {
     if (!pencilToolActive || !isDrawing) return;
@@ -51,6 +56,28 @@ const eraser = $(".bi-eraser.tool");
 eraser.on("click", () => {
     // More efficient than ctx.reset() since it doesn't reset any context state other than the pixel buffer.
     ctx.clearRect(0, 0, canvasElem.width, canvasElem.height);
+    setCanvasBackground("white");
     pencilToolActive = false;
     document.body.classList.remove(PENCIL_CURSOR_CLASS_NAME);
+    guessText.text("");
 });
+
+const guessBtn = $("button");
+guessBtn.on("click", async () => {
+    const base64DataURL = canvasElem.toDataURL("image/png");
+
+    try {
+        const result = await axios.post(`${DEV_SERVER_BASE_URL}/api/predict`, {
+            base64DataURL,
+        });
+
+        guessText.text(`I think you drew a ${result.data}.`);
+    } catch (e) {
+        guessText.text(`I have no clue what that is.`);
+    }
+});
+
+function setCanvasBackground(color: string) {
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, canvasElem.width, canvasElem.height);
+}
