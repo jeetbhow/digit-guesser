@@ -4,7 +4,7 @@ import $ from "jquery";
 import axios from "axios";
 
 const PENCIL_CURSOR_CLASS_NAME = "pencil-cursor";
-const DEV_SERVER_BASE_URL = "http://localhost:8000";
+const SERVER_BASE_URL = "https://digit-guesser.onrender.com";
 
 let pencilToolActive = false;
 let isDrawing = false;
@@ -67,7 +67,7 @@ guessBtn.on("click", async () => {
     const base64DataURL = canvasElem.toDataURL("image/png");
 
     try {
-        const result = await axios.post(`${DEV_SERVER_BASE_URL}/api/predict`, {
+        const result = await axios.post(`${SERVER_BASE_URL}/api/predict`, {
             base64DataURL,
         });
 
