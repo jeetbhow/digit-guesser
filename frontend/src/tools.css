@@ -9,3 +9,7 @@
     border: solid black 1px;
     padding: 0.2rem;
 }
+
+.pencil-cursor {
+    cursor: url("../public/circle-fill.svg") 0 0, auto;
+}
