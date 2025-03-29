@@ -15,6 +15,7 @@ import base64
 
 CLIENT_DEV_URL = "http://localhost:5173"
 CLIENT_DEV_PREVIEW_URL = "http://localhost:4173"
+PROD_URL = "https://jeetbhow.github.io"
 
 
 @asynccontextmanager
@@ -27,7 +28,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[CLIENT_DEV_URL, CLIENT_DEV_PREVIEW_URL],
+    allow_origins=[CLIENT_DEV_URL, CLIENT_DEV_PREVIEW_URL, PROD_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
